@@ -583,25 +583,30 @@ const Hero = ({ lastUpdated }) => (
 
 // ─── OVERVIEW TAB ─────────────────────────────────────────────────────────────
 // ─── DOLLAR VOLUME BAR CHART ─────────────────────────────────────────────────
-const DollarVolumeChart = ({ data }) => {
-  const chartData = data.sfh.map((sfhRow) => {
-    const yr = sfhRow.year;
-    const salesSfhRow = data.salesSfh.find(r => r.year === yr) || {};
-    const salesCondoRow = data.salesCondo.find(r => r.year === yr) || {};
-    const salesThRow = data.salesTownhome.find(r => r.year === yr) || {};
-    const condoRow = data.condos.find(r => r.year === yr) || {};
-    const thRow = data.townhomes.find(r => r.year === yr) || {};
-
-    const calc = (valley) => {
-      let total = 0;
-      if (sfhRow[valley] && salesSfhRow[valley]) total += sfhRow[valley] * salesSfhRow[valley];
-      if (condoRow[valley] && salesCondoRow[valley]) total += condoRow[valley] * salesCondoRow[valley];
-      if (thRow[valley] && salesThRow[valley]) total += thRow[valley] * salesThRow[valley];
-      return total;
-    };
-
-    return { year: yr, north: calc("north"), mid: calc("mid"), south: calc("south") };
-  });
+const DollarVolumeChart = () => {
+  const chartData = [
+    {year:2006,north:39900000,mid:6700000,south:23800000},
+    {year:2007,north:87800000,mid:16500000,south:40200000},
+    {year:2008,north:92800000,mid:30300000,south:35300000},
+    {year:2009,north:113600000,mid:19200000,south:35300000},
+    {year:2010,north:158500000,mid:21000000,south:37900000},
+    {year:2011,north:140400000,mid:29600000,south:39600000},
+    {year:2012,north:187800000,mid:46300000,south:64600000},
+    {year:2013,north:159000000,mid:34200000,south:60400000},
+    {year:2014,north:197900000,mid:68300000,south:45000000},
+    {year:2015,north:230500000,mid:52300000,south:63500000},
+    {year:2016,north:194700000,mid:38600000,south:74500000},
+    {year:2017,north:326600000,mid:52400000,south:93000000},
+    {year:2018,north:344700000,mid:69300000,south:114100000},
+    {year:2019,north:345400000,mid:52400000,south:103900000},
+    {year:2020,north:580400000,mid:197300000,south:129300000},
+    {year:2021,north:593800000,mid:141200000,south:193000000},
+    {year:2022,north:412100000,mid:71300000,south:164800000},
+    {year:2023,north:483600000,mid:102300000,south:135900000},
+    {year:2024,north:591900000,mid:124700000,south:120700000},
+    {year:2025,north:510400000,mid:153500000,south:162300000},
+    {year:2026,north:137900000,mid:34300000,south:36400000},
+  ];
 
   const fmtDollarVol = (v) => {
     if (v >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
@@ -724,10 +729,10 @@ const Overview = ({ data }) => {
         <SalesBars data={data.salesTownhome} keys={["north","south"]} startYear={2016}/>
       </Card>
       <SectionBanner title="Total Dollar Volume" sub="Estimated total value of all properties sold · by valley · 2006–2026"/>
-      <Card title="Total Dollar Volume by Valley" sub="Median price × sales count, summed across SFH + Condo + Townhome · 2006–2026"
-        note="Dollar volume is estimated using median sale price × number of closed sales for each property type. 2026 is a partial year.">
+      <Card title="Total Dollar Volume by Valley" sub="Sum of all sold prices · SFH + Condo + Townhome · 2006–2026"
+        note="Total dollar volume is the sum of all closed sale prices for each valley. 2026 is a partial year.">
         <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"mid",label:"Mid Valley"},{key:"south",label:"South Valley"}]}/>
-        <DollarVolumeChart data={data}/>
+        <DollarVolumeChart/>
       </Card>
     </div>
   );
