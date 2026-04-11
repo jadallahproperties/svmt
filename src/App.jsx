@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   LineChart, Line, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine
@@ -24,8 +24,6 @@ const DASH = { north:"0", mid:"0", south:"0" };
 const VALLEY_COLOR = { north: T.north, mid: T.mid, south: T.south };
 const VALLEY_DASH  = { north: DASH.north, mid: DASH.mid, south: DASH.south };
 
-const STORAGE_KEY = "svmt_v4";
-const ADMIN_PASS  = "sunvalley2025";
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const INITIAL = {
@@ -524,7 +522,7 @@ const TABS = [
   {id:"south",    label:"South Valley"},
 ];
 
-const Nav = ({ tab, setTab, onAdmin }) => (
+const Nav = ({ tab, setTab }) => (
   <nav style={{background:T.navBg,borderBottom:"1px solid rgba(255,255,255,0.08)",position:"sticky",top:0,zIndex:100}}>
     <div style={{maxWidth:1100,margin:"0 auto",padding:"0 40px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <div style={{display:"flex",alignItems:"baseline",gap:10,padding:"16px 0",flexShrink:0}}>
@@ -541,7 +539,6 @@ const Nav = ({ tab, setTab, onAdmin }) => (
             padding:"16px 16px",transition:"color 0.15s",whiteSpace:"nowrap"
           }}>{t.label}</button>
         ))}
-        <button onClick={onAdmin} style={{background:"none",border:"1px solid rgba(255,255,255,0.15)",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontSize:11,color:"#7A6E60",padding:"6px 14px",borderRadius:3,marginLeft:16}}>Admin</button>
       </div>
     </div>
   </nav>
@@ -902,183 +899,18 @@ const Footer = () => (
 );
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ADMIN LOGIN
-// ═══════════════════════════════════════════════════════════════════════════════
-const AdminLogin = ({ onLogin, onBack }) => {
-  const [pw, setPw] = useState(""); const [err, setErr] = useState(false);
-  const go = () => pw===ADMIN_PASS?(onLogin(),setErr(false)):setErr(true);
-  return (
-    <div style={{minHeight:"100vh",background:T.pageBg,display:"flex",alignItems:"center",justifyContent:"center"}}>
-      <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,padding:"40px 48px",width:380,textAlign:"center",boxShadow:T.shadow}}>
-        <div style={{fontFamily:"Cormorant Garamond,serif",fontSize:28,color:T.textPri,marginBottom:6}}>Data Admin</div>
-        <div style={{fontFamily:"DM Sans,sans-serif",fontSize:14,color:T.textMute,marginBottom:28}}>Sun Valley Market Trends</div>
-        <input type="password" value={pw} onChange={e=>{setPw(e.target.value);setErr(false);}} onKeyDown={e=>e.key==="Enter"&&go()}
-          placeholder="Password" style={{width:"100%",background:"#F8F5F0",border:`1.5px solid ${err?"#A32D2D":T.border}`,borderRadius:4,padding:"12px 14px",color:T.textPri,fontFamily:"DM Sans,sans-serif",fontSize:14,outline:"none",boxSizing:"border-box",marginBottom:err?8:16}}/>
-        {err && <div style={{fontFamily:"DM Sans,sans-serif",fontSize:13,color:"#A32D2D",marginBottom:12}}>Incorrect password</div>}
-        <button onClick={go} style={{width:"100%",background:T.gold,border:"none",borderRadius:4,padding:"12px",color:"#fff",fontFamily:"DM Sans,sans-serif",fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:12}}>Enter</button>
-        <button onClick={onBack} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontSize:13,color:T.textMute}}>← Back to site</button>
-      </div>
-    </div>
-  );
-};
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// ADMIN PANEL
-// ═══════════════════════════════════════════════════════════════════════════════
-const ADMIN_CATS = [
-  {id:"sfh",       label:"Single Family",  fields:[{k:"year",l:"Year"},{k:"north",l:"North",p:true},{k:"mid",l:"Mid",p:true},{k:"south",l:"South",p:true}]},
-  {id:"condos",    label:"Condos",         fields:[{k:"year",l:"Year"},{k:"north",l:"North",p:true},{k:"south",l:"South",p:true}]},
-  {id:"townhomes", label:"Townhomes",      fields:[{k:"year",l:"Year"},{k:"north",l:"North",p:true},{k:"south",l:"South",p:true}]},
-  {id:"volume",    label:"Volume",         fields:[{k:"year",l:"Year"},{k:"northNew",l:"N New"},{k:"northSold",l:"N Sold"},{k:"midNew",l:"M New"},{k:"midSold",l:"M Sold"},{k:"southNew",l:"S New"},{k:"southSold",l:"S Sold"}]},
-  {id:"dom",       label:"Days on Mkt",    fields:[{k:"year",l:"Year"},{k:"north",l:"North"},{k:"mid",l:"Mid"},{k:"south",l:"South"}]},
-  {id:"stl",       label:"Sale-to-List",   fields:[{k:"year",l:"Year"},{k:"north",l:"North"},{k:"mid",l:"Mid"},{k:"south",l:"South"}]},
-  {id:"salesSfh",      label:"Sales — Single Family", fields:[{k:"year",l:"Year"},{k:"north",l:"North"},{k:"mid",l:"Mid"},{k:"south",l:"South"}]},
-  {id:"salesCondo",    label:"Sales — Condos",        fields:[{k:"year",l:"Year"},{k:"north",l:"North"},{k:"south",l:"South"}]},
-  {id:"salesTownhome", label:"Sales — Townhomes",     fields:[{k:"year",l:"Year"},{k:"north",l:"North"},{k:"south",l:"South"}]},
-  {id:"psfCondo",    label:"PSF — Condos",        fields:[{k:"year",l:"Year"},{k:"north",l:"North"},{k:"south",l:"South"}]},
-  {id:"psfTownhome", label:"PSF — Townhomes",     fields:[{k:"year",l:"Year"},{k:"north",l:"North"},{k:"south",l:"South"}]},
-];
-
-const DataTable = ({ rows, fields, onChange, onAdd, onDelete }) => {
-  const [editing, setEditing] = useState(null);
-  const [draft, setDraft] = useState({});
-  const start=i=>{setEditing(i);setDraft({...rows[i]});};
-  const cancel=()=>{setEditing(null);setDraft({});};
-  const save=i=>{onChange(i,fields.reduce((a,f)=>{a[f.k]=Number(draft[f.k])||0;return a;},{}));setEditing(null);};
-  const cs={fontFamily:"DM Sans,sans-serif",fontSize:13,color:T.textPri,padding:"8px 10px",borderBottom:`1px solid ${T.border}`};
-  const hs={fontFamily:"DM Sans,sans-serif",fontSize:12,color:T.textMute,letterSpacing:"0.06em",textTransform:"uppercase",padding:"9px 10px",borderBottom:`1px solid ${T.border}`,textAlign:"left",background:"#F8F5F0"};
-  return (
-    <div style={{overflowX:"auto"}}>
-      <table style={{width:"100%",borderCollapse:"collapse"}}>
-        <thead><tr>{fields.map(f=><th key={f.k} style={hs}>{f.l}</th>)}<th style={hs}>Edit</th></tr></thead>
-        <tbody>
-          {rows.map((row,i)=>(
-            <tr key={i} style={{background:editing===i?"#FFF9F0":"#fff"}}>
-              {fields.map(f=>(
-                <td key={f.k} style={cs}>
-                  {editing===i
-                    ?<input value={draft[f.k]??""} onChange={e=>setDraft({...draft,[f.k]:e.target.value})} style={{background:"#F8F5F0",border:`1.5px solid ${T.gold}`,borderRadius:3,padding:"4px 8px",color:T.textPri,fontFamily:"DM Sans,sans-serif",fontSize:13,width:f.k==="year"?66:88,outline:"none"}}/>
-                    :<span>{f.p?fmtPrice(row[f.k]):row[f.k]}</span>}
-                </td>
-              ))}
-              <td style={cs}>
-                {editing===i
-                  ?<><button onClick={()=>save(i)} style={{background:T.gold,border:"none",borderRadius:3,padding:"4px 12px",color:"#fff",fontFamily:"DM Sans,sans-serif",fontSize:12,cursor:"pointer",marginRight:6}}>Save</button><button onClick={cancel} style={{background:"none",border:`1px solid ${T.border}`,borderRadius:3,padding:"4px 10px",color:T.textMute,fontFamily:"DM Sans,sans-serif",fontSize:12,cursor:"pointer"}}>Cancel</button></>
-                  :<><button onClick={()=>start(i)} style={{background:"none",border:`1px solid ${T.border}`,borderRadius:3,padding:"4px 10px",color:T.textMute,fontFamily:"DM Sans,sans-serif",fontSize:12,cursor:"pointer",marginRight:6}}>Edit</button><button onClick={()=>onDelete(i)} style={{background:"none",border:"1px solid #E5C5C5",borderRadius:3,padding:"4px 8px",color:"#A32D2D",fontFamily:"DM Sans,sans-serif",fontSize:12,cursor:"pointer"}}>✕</button></>}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div style={{padding:"14px 0 0"}}>
-        <button onClick={onAdd} style={{background:"none",border:`1.5px dashed ${T.gold}`,borderRadius:4,padding:"8px 20px",color:T.gold,fontFamily:"DM Sans,sans-serif",fontSize:13,cursor:"pointer"}}>+ Add Year</button>
-      </div>
-    </div>
-  );
-};
-
-const AdminPanel = ({ data, onUpdate, onLogout }) => {
-  const [cat, setCat]=useState("sfh"); const [saved, setSaved]=useState(false); const [dateStr, setDateStr]=useState(data.lastUpdated);
-  const def=ADMIN_CATS.find(c=>c.id===cat);
-  const blank=c=>{
-    if(c==="volume") return {year:0,northNew:0,northSold:0,midNew:0,midSold:0,southNew:0,southSold:0};
-    if(c==="sfh" || c==="dom" || c==="stl" || c==="psfSfh" || c==="salesSfh") return {year:0,north:0,mid:0,south:0};
-    return {year:0,north:0,south:0};
-  };
-  const handleSave=async()=>{
-    const d={...data,lastUpdated:dateStr};
-    try{await window.storage.set(STORAGE_KEY,JSON.stringify(d));}catch{}
-    onUpdate(d);setSaved(true);setTimeout(()=>setSaved(false),2500);
-  };
-  return (
-    <div style={{minHeight:"100vh",background:T.pageBg}}>
-      <div style={{background:T.navBg,padding:"0 40px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
-        <span style={{fontFamily:"Cormorant Garamond,serif",fontSize:20,color:"#E8D9BF",padding:"14px 0",display:"block"}}>SVMT Admin</span>
-        <div style={{display:"flex",gap:12,alignItems:"center"}}>
-          {saved&&<span style={{fontFamily:"DM Sans,sans-serif",fontSize:13,color:"#7dbf82"}}>✓ Saved</span>}
-          <button onClick={handleSave} style={{background:T.gold,border:"none",borderRadius:4,padding:"8px 20px",color:"#fff",fontFamily:"DM Sans,sans-serif",fontSize:13,fontWeight:500,cursor:"pointer"}}>Save All Changes</button>
-          <button onClick={onLogout} style={{background:"none",border:"1px solid rgba(255,255,255,0.2)",borderRadius:4,padding:"8px 14px",color:"#7A6E60",fontFamily:"DM Sans,sans-serif",fontSize:13,cursor:"pointer"}}>← Back to Site</button>
-        </div>
-      </div>
-      <div style={{padding:"32px 40px"}}>
-        <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,padding:"20px 24px",marginBottom:24,boxShadow:T.shadow}}>
-          <div style={{fontFamily:"DM Sans,sans-serif",fontSize:13,color:T.textMute,letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:4}}>Q1 Comparison Label</div>
-          <div style={{fontFamily:"DM Sans,sans-serif",fontSize:12,color:T.textMute,marginBottom:10}}>Shown as the row label in the snapshot card — e.g. "Q1 2025 vs Q1 2026"</div>
-          <input value={data.q1.label} onChange={e=>onUpdate({...data,q1:{...data.q1,label:e.target.value}})}
-            style={{background:"#F8F5F0",border:`1.5px solid ${T.border}`,borderRadius:4,padding:"9px 14px",color:T.textPri,fontFamily:"DM Sans,sans-serif",fontSize:14,outline:"none",width:320}}/>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginTop:16}}>
-            {[{key:"north",label:"North Valley"},{key:"mid",label:"Mid Valley"},{key:"south",label:"South Valley"}].map(({key,label})=>(
-              <div key={key}>
-                <div style={{fontFamily:"DM Sans,sans-serif",fontSize:13,color:T.textSec,marginBottom:8,fontWeight:500}}>{label}</div>
-                <div style={{display:"flex",gap:12}}>
-                  <div>
-                    <div style={{fontFamily:"DM Sans,sans-serif",fontSize:11,color:T.textMute,marginBottom:4}}>Prior year</div>
-                    <input type="number" value={data.q1[key].prev} onChange={e=>onUpdate({...data,q1:{...data.q1,[key]:{...data.q1[key],prev:Number(e.target.value)}}})}
-                      style={{background:"#F8F5F0",border:`1.5px solid ${T.border}`,borderRadius:4,padding:"7px 10px",color:T.textPri,fontFamily:"DM Sans,sans-serif",fontSize:13,outline:"none",width:80}}/>
-                  </div>
-                  <div>
-                    <div style={{fontFamily:"DM Sans,sans-serif",fontSize:11,color:T.textMute,marginBottom:4}}>Current year</div>
-                    <input type="number" value={data.q1[key].curr} onChange={e=>onUpdate({...data,q1:{...data.q1,[key]:{...data.q1[key],curr:Number(e.target.value)}}})}
-                      style={{background:"#F8F5F0",border:`1.5px solid ${T.border}`,borderRadius:4,padding:"7px 10px",color:T.textPri,fontFamily:"DM Sans,sans-serif",fontSize:13,outline:"none",width:80}}/>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,padding:"20px 24px",marginBottom:24,boxShadow:T.shadow}}>
-          <div style={{fontFamily:"DM Sans,sans-serif",fontSize:13,color:T.textMute,letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:10}}>Last Updated Label</div>
-          <div style={{display:"flex",gap:12,alignItems:"center"}}>
-            <input value={dateStr} onChange={e=>setDateStr(e.target.value)} style={{background:"#F8F5F0",border:`1.5px solid ${T.border}`,borderRadius:4,padding:"10px 14px",color:T.textPri,fontFamily:"DM Sans,sans-serif",fontSize:14,outline:"none",width:220}}/>
-            <span style={{fontFamily:"DM Sans,sans-serif",fontSize:13,color:T.textMute}}>e.g. "May 2026"</span>
-          </div>
-        </div>
-        <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:24}}>
-          {ADMIN_CATS.map(c=>(
-            <button key={c.id} onClick={()=>setCat(c.id)} style={{background:cat===c.id?T.gold:T.cardBg,border:`1.5px solid ${cat===c.id?T.gold:T.border}`,borderRadius:4,padding:"8px 16px",cursor:"pointer",color:cat===c.id?"#fff":T.textSec,fontFamily:"DM Sans,sans-serif",fontSize:13,boxShadow:T.shadow}}>
-              {c.label}
-            </button>
-          ))}
-        </div>
-        <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,padding:"24px 28px",boxShadow:T.shadow}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
-            <div style={{fontFamily:"Cormorant Garamond,serif",fontSize:24,color:T.textPri}}>{def.label}</div>
-            <div style={{fontFamily:"DM Sans,sans-serif",fontSize:13,color:T.textMute}}>{data[cat].length} rows</div>
-          </div>
-          <DataTable
-            rows={data[cat]} fields={def.fields}
-            onChange={(i,u)=>onUpdate({...data,[cat]:data[cat].map((r,x)=>x===i?u:r)})}
-            onAdd={()=>{const last=data[cat][data[cat].length-1];const b={...blank(cat),year:last.year+1};onUpdate({...data,[cat]:[...data[cat],b]});}}
-            onDelete={i=>{if(window.confirm("Delete this row?"))onUpdate({...data,[cat]:data[cat].filter((_,x)=>x!==i)});}}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // APP
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function App() {
-  const [data, setData]         = useState(INITIAL);
-  const [tab, setTab]           = useState("overview");
-  const [view, setView]         = useState("site");
-  const [adminAuth, setAdminAuth] = useState(false);
-
-  useEffect(()=>{
-    (async()=>{try{const r=await window.storage.get(STORAGE_KEY);if(r?.value)setData(JSON.parse(r.value));}catch{}})();
-  },[]);
-
-  const goAdmin = () => adminAuth ? setView("admin") : setView("login");
-
-  if (view==="login") return <AdminLogin onLogin={()=>{setAdminAuth(true);setView("admin");}} onBack={()=>setView("site")}/>;
-  if (view==="admin") return <AdminPanel data={data} onUpdate={setData} onLogout={()=>setView("site")}/>;
+  const [data] = useState(INITIAL);
+  const [tab, setTab] = useState("overview");
 
   return (
     <div style={{minHeight:"100vh",background:T.pageBg,paddingBottom:52}}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0;}input,button{font-family:inherit}::-webkit-scrollbar{width:6px;background:#F2EDE6}::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:3px}`}</style>
-      <Nav tab={tab} setTab={setTab} onAdmin={goAdmin}/>
+      <Nav tab={tab} setTab={setTab}/>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <Hero lastUpdated={data.lastUpdated}/>
         {tab==="overview" && <Overview data={data}/>}
