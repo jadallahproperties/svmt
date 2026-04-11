@@ -522,27 +522,60 @@ const TABS = [
   {id:"south",    label:"South Valley"},
 ];
 
-const Nav = ({ tab, setTab }) => (
-  <nav style={{background:T.navBg,borderBottom:"1px solid rgba(255,255,255,0.08)",position:"sticky",top:0,zIndex:100}}>
-    <div className="svmt-nav-inner" style={{maxWidth:1100,margin:"0 auto",padding:"0 40px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-      <div style={{display:"flex",alignItems:"baseline",gap:10,padding:"16px 0",flexShrink:0}}>
-        <span style={{fontFamily:"Cormorant Garamond,serif",fontSize:20,fontWeight:600,color:"#E8D9BF",letterSpacing:"0.06em"}}>SUN VALLEY</span>
-        <span style={{fontFamily:"DM Sans,sans-serif",fontSize:11,color:"#7A6E60",letterSpacing:"0.2em",textTransform:"uppercase"}}>Market Trends</span>
+const Nav = ({ tab, setTab }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  return (
+    <nav style={{background:T.navBg,borderBottom:"1px solid rgba(255,255,255,0.08)",position:"sticky",top:0,zIndex:100}}>
+      <div className="svmt-nav-inner" style={{maxWidth:1100,margin:"0 auto",padding:"0 40px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{display:"flex",alignItems:"baseline",gap:10,padding:"16px 0",flexShrink:0}}>
+          <span style={{fontFamily:"Cormorant Garamond,serif",fontSize:20,fontWeight:600,color:"#E8D9BF",letterSpacing:"0.06em"}}>SUN VALLEY</span>
+          <span style={{fontFamily:"DM Sans,sans-serif",fontSize:11,color:"#7A6E60",letterSpacing:"0.2em",textTransform:"uppercase"}}>Market Trends</span>
+        </div>
+        {/* Desktop tabs */}
+        <div className="svmt-nav-desktop" style={{display:"flex",gap:2,alignItems:"center"}}>
+          {TABS.map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id)} style={{
+              background:"none",border:"none",cursor:"pointer",
+              fontFamily:"DM Sans,sans-serif",fontSize:13,letterSpacing:"0.06em",textTransform:"uppercase",
+              color:tab===t.id?"#E8D9BF":"#7A6E60",
+              borderBottom:tab===t.id?"2px solid #B8740A":"2px solid transparent",
+              padding:"16px 16px",transition:"color 0.15s",whiteSpace:"nowrap"
+            }}>{t.label}</button>
+          ))}
+        </div>
+        {/* Mobile hamburger */}
+        <button className="svmt-nav-burger" onClick={()=>setMenuOpen(!menuOpen)} style={{
+          display:"none",background:"none",border:"none",cursor:"pointer",padding:"8px",
+        }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8D9BF" strokeWidth="2" strokeLinecap="round">
+            {menuOpen
+              ? <><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></>
+              : <><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></>
+            }
+          </svg>
+        </button>
       </div>
-      <div className="svmt-nav-tabs" style={{display:"flex",gap:2,alignItems:"center"}}>
-        {TABS.map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)} style={{
-            background:"none",border:"none",cursor:"pointer",
-            fontFamily:"DM Sans,sans-serif",fontSize:13,letterSpacing:"0.06em",textTransform:"uppercase",
-            color:tab===t.id?"#E8D9BF":"#7A6E60",
-            borderBottom:tab===t.id?"2px solid #B8740A":"2px solid transparent",
-            padding:"16px 16px",transition:"color 0.15s",whiteSpace:"nowrap"
-          }}>{t.label}</button>
-        ))}
-      </div>
-    </div>
-  </nav>
-);
+      {/* Mobile dropdown */}
+      {menuOpen && (
+        <div className="svmt-nav-mobile" style={{
+          display:"none",flexDirection:"column",padding:"0 16px 12px",
+          borderTop:"1px solid rgba(255,255,255,0.08)",
+        }}>
+          {TABS.map(t=>(
+            <button key={t.id} onClick={()=>{setTab(t.id);setMenuOpen(false);}} style={{
+              background:"none",border:"none",cursor:"pointer",textAlign:"left",
+              fontFamily:"DM Sans,sans-serif",fontSize:14,letterSpacing:"0.06em",textTransform:"uppercase",
+              color:tab===t.id?"#E8D9BF":"#7A6E60",
+              padding:"12px 8px",
+              borderLeft:tab===t.id?"3px solid #B8740A":"3px solid transparent",
+              transition:"color 0.15s",
+            }}>{t.label}</button>
+          ))}
+        </div>
+      )}
+    </nav>
+  );
+};
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 const Hero = ({ lastUpdated }) => (
@@ -940,7 +973,7 @@ export default function App() {
 
   return (
     <div style={{minHeight:"100vh",background:T.pageBg,paddingBottom:52}}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0;}input,button{font-family:inherit}::-webkit-scrollbar{width:6px;background:#F2EDE6}::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:3px}@media(max-width:768px){.svmt-snap-grid{grid-template-columns:1fr!important}.svmt-snap-grid>div{border-left:none!important;border-top:1px solid rgba(0,0,0,0.09)}.svmt-snap-grid>div:first-child{border-top:none}.svmt-nav-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}.svmt-section{padding:20px 16px!important}.svmt-hero{padding:32px 16px 24px!important}.svmt-hero h1{font-size:32px!important}.svmt-nav-inner{padding:0 16px!important}.svmt-footer{padding:24px 16px!important}.svmt-sticky-inner{padding:8px 16px!important;flex-direction:column;gap:8px!important;text-align:center}}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0;}input,button{font-family:inherit}::-webkit-scrollbar{width:6px;background:#F2EDE6}::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:3px}@media(max-width:768px){.svmt-snap-grid{grid-template-columns:1fr!important}.svmt-snap-grid>div{border-left:none!important;border-top:1px solid rgba(0,0,0,0.09)}.svmt-snap-grid>div:first-child{border-top:none}.svmt-nav-desktop{display:none!important}.svmt-nav-burger{display:block!important}.svmt-nav-mobile{display:flex!important}.svmt-section{padding:20px 16px!important}.svmt-hero{padding:32px 16px 24px!important}.svmt-hero h1{font-size:32px!important}.svmt-nav-inner{padding:0 16px!important}.svmt-footer{padding:24px 16px!important}.svmt-sticky-inner{padding:8px 16px!important;flex-direction:column;gap:8px!important;text-align:center}}`}</style>
       <Nav tab={tab} setTab={setTab}/>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <Hero lastUpdated={data.lastUpdated}/>
