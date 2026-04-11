@@ -457,7 +457,7 @@ const StickyBar = () => (
     background:"rgba(26,22,16,0.93)",backdropFilter:"blur(8px)",
     borderTop:"1px solid rgba(201,150,58,0.2)",
   }}>
-    <div style={{maxWidth:1100,margin:"0 auto",padding:"8px 28px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+    <div className="svmt-sticky-inner" style={{maxWidth:1100,margin:"0 auto",padding:"8px 28px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <div style={{display:"flex",alignItems:"center",gap:12}}>
         <div style={{fontFamily:"Cormorant Garamond,serif",fontSize:15,color:"#E8D9BF"}}>Jordan Jadallah</div>
         <div style={{width:1,height:14,background:"rgba(255,255,255,0.15)"}}/>
@@ -524,12 +524,12 @@ const TABS = [
 
 const Nav = ({ tab, setTab }) => (
   <nav style={{background:T.navBg,borderBottom:"1px solid rgba(255,255,255,0.08)",position:"sticky",top:0,zIndex:100}}>
-    <div style={{maxWidth:1100,margin:"0 auto",padding:"0 40px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+    <div className="svmt-nav-inner" style={{maxWidth:1100,margin:"0 auto",padding:"0 40px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <div style={{display:"flex",alignItems:"baseline",gap:10,padding:"16px 0",flexShrink:0}}>
         <span style={{fontFamily:"Cormorant Garamond,serif",fontSize:20,fontWeight:600,color:"#E8D9BF",letterSpacing:"0.06em"}}>SUN VALLEY</span>
         <span style={{fontFamily:"DM Sans,sans-serif",fontSize:11,color:"#7A6E60",letterSpacing:"0.2em",textTransform:"uppercase"}}>Market Trends</span>
       </div>
-      <div style={{display:"flex",gap:2,alignItems:"center"}}>
+      <div className="svmt-nav-tabs" style={{display:"flex",gap:2,alignItems:"center"}}>
         {TABS.map(t=>(
           <button key={t.id} onClick={()=>setTab(t.id)} style={{
             background:"none",border:"none",cursor:"pointer",
@@ -546,7 +546,7 @@ const Nav = ({ tab, setTab }) => (
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 const Hero = ({ lastUpdated }) => (
-  <div style={{background:T.cardBg,borderBottom:`1px solid ${T.border}`,padding:"48px 40px 36px",textAlign:"center"}}>
+  <div className="svmt-hero" style={{background:T.cardBg,borderBottom:`1px solid ${T.border}`,padding:"48px 40px 36px",textAlign:"center"}}>
     <div style={{fontFamily:"DM Sans,sans-serif",fontSize:13,color:T.gold,letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:12}}>Blaine County, Idaho</div>
     <h1 style={{fontFamily:"Cormorant Garamond,serif",fontSize:52,fontWeight:400,color:T.textPri,letterSpacing:"0.01em",margin:"0 0 12px",lineHeight:1.1}}>
       Sun Valley Real Estate Market Trends
@@ -640,13 +640,13 @@ const Overview = ({ data }) => {
   const psfL=data.psfSfh[data.psfSfh.length-1];
   const domL=data.dom[data.dom.length-1];
   return (
-    <div style={{padding:"32px 40px"}}>
+    <div className="svmt-section" style={{padding:"32px 40px"}}>
       {/* Market summary for SEO */}
       <p style={{fontFamily:"DM Sans,sans-serif",fontSize:15,color:T.textSec,lineHeight:1.7,maxWidth:900,margin:"0 0 28px",padding:"0 4px"}}>
         The Sun Valley real estate market in Blaine County, Idaho encompasses three distinct areas: North Valley (Ketchum and Sun Valley), Mid Valley, and South Valley (Hailey and Bellevue). This page tracks annual trends in median sale prices, days on market, sale-to-list ratios, price per square foot, transaction counts, and total dollar volume from 2006 to present. Data is sourced from the Sun Valley Board of Realtors (SVBOR) and updated monthly.
       </p>
       {/* Snapshot grid */}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:2,marginBottom:32,borderRadius:8,overflow:"hidden",border:`1px solid ${T.border}`,boxShadow:T.shadow}}>
+      <div className="svmt-snap-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:2,marginBottom:32,borderRadius:8,overflow:"hidden",border:`1px solid ${T.border}`,boxShadow:T.shadow}}>
         {[
           {key:"north",label:"North Valley",color:T.north,sfh:sfhL.north,sfhPrev:sfhP.north,condo:cL.north,condoPrev:cP.north,th:tL.north,thPrev:tP.north,dom:domL.north,abs:volL.northNew>0?Math.round((volL.northSold/volL.northNew)*100):0,q1:q1.north},
           {key:"mid",  label:"Mid Valley",  color:T.mid,  sfh:sfhL.mid, sfhPrev:sfhP.mid, condo:null,     condoPrev:null,  th:null,     thPrev:null,   dom:domL.mid,  abs:volL.midNew>0?Math.round((volL.midSold/volL.midNew)*100):0,  q1:q1.mid},
@@ -781,7 +781,7 @@ const ValleyTab = ({ data, valley, label, sub, hasCondo, hasTownhome }) => {
   const absRate = volL[`${valley}New`]>0 ? Math.round((volL[`${valley}Sold`]/volL[`${valley}New`])*100) : 0;
 
   return (
-    <div style={{padding:"32px 40px"}}>
+    <div className="svmt-section" style={{padding:"32px 40px"}}>
       {/* Header banner */}
       <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,padding:"24px 28px",marginBottom:24,boxShadow:T.shadow,borderLeft:`5px solid ${color}`}}>
         <div style={{fontFamily:"Cormorant Garamond,serif",fontSize:28,fontWeight:600,color:T.textPri,marginBottom:4}}>{label}</div>
@@ -890,7 +890,7 @@ const ValleyTab = ({ data, valley, label, sub, hasCondo, hasTownhome }) => {
 const Footer = () => (
   <div>
     {/* CTA Band */}
-    <div style={{background:T.navBg,padding:"40px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:24}}>
+    <div className="svmt-footer" style={{background:T.navBg,padding:"40px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:24}}>
       <div style={{maxWidth:520}}>
         <div style={{fontFamily:"Cormorant Garamond,serif",fontSize:28,fontWeight:400,color:"#E8D9BF",marginBottom:8,lineHeight:1.2}}>
           Want more Sun Valley market insights?
@@ -940,7 +940,7 @@ export default function App() {
 
   return (
     <div style={{minHeight:"100vh",background:T.pageBg,paddingBottom:52}}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0;}input,button{font-family:inherit}::-webkit-scrollbar{width:6px;background:#F2EDE6}::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:3px}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0;}input,button{font-family:inherit}::-webkit-scrollbar{width:6px;background:#F2EDE6}::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:3px}@media(max-width:768px){.svmt-snap-grid{grid-template-columns:1fr!important}.svmt-snap-grid>div{border-left:none!important;border-top:1px solid rgba(0,0,0,0.09)}.svmt-snap-grid>div:first-child{border-top:none}.svmt-nav-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}.svmt-section{padding:20px 16px!important}.svmt-hero{padding:32px 16px 24px!important}.svmt-hero h1{font-size:32px!important}.svmt-nav-inner{padding:0 16px!important}.svmt-footer{padding:24px 16px!important}.svmt-sticky-inner{padding:8px 16px!important;flex-direction:column;gap:8px!important;text-align:center}}`}</style>
       <Nav tab={tab} setTab={setTab}/>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <Hero lastUpdated={data.lastUpdated}/>
