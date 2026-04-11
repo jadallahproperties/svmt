@@ -310,7 +310,7 @@ const ChartTip = ({ active, payload, label, fmt }) => {
 const Card = ({ title, sub, note, children }) => (
   <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,boxShadow:T.shadow,marginBottom:24}}>
     <div style={{padding:"22px 28px 0"}}>
-      <div style={{fontFamily:"Cormorant Garamond,serif",fontSize:26,fontWeight:600,color:T.textPri,lineHeight:1.2,marginBottom:3}}>{title}</div>
+      <h3 style={{fontFamily:"Cormorant Garamond,serif",fontSize:26,fontWeight:600,color:T.textPri,lineHeight:1.2,marginBottom:3,margin:"0 0 3px"}}>{title}</h3>
       {sub && <div style={{fontFamily:"DM Sans,sans-serif",fontSize:14,color:T.textMute,marginBottom:0}}>{sub}</div>}
     </div>
     <div style={{padding:"16px 28px 20px"}}>{children}</div>
@@ -346,7 +346,7 @@ const SalesBars = ({ data, keys, height=280, startYear=2006 }) => {
 const HIGHLIGHT_OFFSET = { north: -44, mid: -22, south: 18 };
 const SectionBanner = ({ title, sub }) => (
   <div style={{borderLeft:`4px solid ${T.gold}`,paddingLeft:16,marginBottom:24,marginTop:8}}>
-    <div style={{fontFamily:"Cormorant Garamond,serif",fontSize:22,fontWeight:600,color:T.textPri,lineHeight:1.2}}>{title}</div>
+    <h2 style={{fontFamily:"Cormorant Garamond,serif",fontSize:22,fontWeight:600,color:T.textPri,lineHeight:1.2,margin:0}}>{title}</h2>
     {sub && <div style={{fontFamily:"DM Sans,sans-serif",fontSize:14,color:T.textMute,marginTop:3}}>{sub}</div>}
   </div>
 );
@@ -549,7 +549,7 @@ const Hero = ({ lastUpdated }) => (
   <div style={{background:T.cardBg,borderBottom:`1px solid ${T.border}`,padding:"48px 40px 36px",textAlign:"center"}}>
     <div style={{fontFamily:"DM Sans,sans-serif",fontSize:13,color:T.gold,letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:12}}>Blaine County, Idaho</div>
     <h1 style={{fontFamily:"Cormorant Garamond,serif",fontSize:52,fontWeight:400,color:T.textPri,letterSpacing:"0.01em",margin:"0 0 12px",lineHeight:1.1}}>
-      Real Estate Market Trends
+      Sun Valley Real Estate Market Trends
     </h1>
     <p style={{fontFamily:"DM Sans,sans-serif",fontSize:15,color:T.textMute,margin:"0 0 24px"}}>
       Annual data from closed sales · Source: SVBOR · Last updated {lastUpdated}
@@ -641,6 +641,10 @@ const Overview = ({ data }) => {
   const domL=data.dom[data.dom.length-1];
   return (
     <div style={{padding:"32px 40px"}}>
+      {/* Market summary for SEO */}
+      <p style={{fontFamily:"DM Sans,sans-serif",fontSize:15,color:T.textSec,lineHeight:1.7,maxWidth:900,margin:"0 0 28px",padding:"0 4px"}}>
+        The Sun Valley real estate market in Blaine County, Idaho encompasses three distinct areas: North Valley (Ketchum and Sun Valley), Mid Valley, and South Valley (Hailey and Bellevue). This page tracks annual trends in median sale prices, days on market, sale-to-list ratios, price per square foot, transaction counts, and total dollar volume from 2006 to present. Data is sourced from the Sun Valley Board of Realtors (SVBOR) and updated monthly.
+      </p>
       {/* Snapshot grid */}
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:2,marginBottom:32,borderRadius:8,overflow:"hidden",border:`1px solid ${T.border}`,boxShadow:T.shadow}}>
         {[
@@ -731,6 +735,33 @@ const Overview = ({ data }) => {
         <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"mid",label:"Mid Valley"},{key:"south",label:"South Valley"}]}/>
         <DollarVolumeChart/>
       </Card>
+
+      {/* FAQ Section */}
+      <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,boxShadow:T.shadow,marginBottom:24,marginTop:32}}>
+        <div style={{padding:"28px 28px 0"}}>
+          <h2 style={{fontFamily:"Cormorant Garamond,serif",fontSize:28,fontWeight:600,color:T.textPri,margin:"0 0 4px"}}>Sun Valley Real Estate FAQ</h2>
+          <div style={{fontFamily:"DM Sans,sans-serif",fontSize:14,color:T.textMute,marginBottom:20}}>Common questions about the Blaine County, Idaho real estate market</div>
+        </div>
+        <div style={{padding:"0 28px 28px"}}>
+          {[
+            {q:"What is the median home price in Sun Valley and Ketchum, Idaho?",
+             a:"As of early 2026, the median single-family home price in North Valley (Ketchum and Sun Valley) is $3.65M. Mid Valley has a median of $3.39M, and South Valley (Hailey and Bellevue) has a median of $875K. These figures are based on closed sales data from the Sun Valley Board of Realtors."},
+            {q:"How has the Sun Valley real estate market changed since 2020?",
+             a:"The Sun Valley market saw dramatic price appreciation from 2020 to 2023, with North Valley SFH medians rising from $1.93M to $4.0M. Prices have since stabilized, with North Valley at $3.65M in early 2026. Total dollar volume across all valleys peaked at over $900M in 2020 and remains elevated compared to pre-pandemic levels."},
+            {q:"What is the average days on market in Blaine County, Idaho?",
+             a:"As of Q1 2026, properties in North Valley average 99 days on market, Mid Valley averages 79 days, and South Valley averages 101 days. These figures have increased from the historic lows of 2021\u20132022, when properties were selling in 50\u201365 days, reflecting a return toward more balanced market conditions."},
+            {q:"What is the difference between North Valley, Mid Valley, and South Valley?",
+             a:"North Valley includes Ketchum and Sun Valley \u2014 the luxury core with the highest prices and closest proximity to Sun Valley Resort. Mid Valley is the rural corridor between Ketchum and Hailey with limited inventory. South Valley encompasses Hailey and Bellevue, offering more affordable options and the largest transaction volume in the county."},
+            {q:"How many homes sell each year in Sun Valley and Blaine County?",
+             a:"In 2025, there were approximately 219 total closed residential sales in North Valley, 38 in Mid Valley, and 179 in South Valley across all property types (single-family homes, condos, and townhomes). Transaction volume peaked in 2020 with over 780 sales countywide."},
+          ].map(({q,a},i)=>(
+            <details key={i} style={{borderBottom:i<4?`1px solid ${T.border}`:"none",padding:"16px 0"}}>
+              <summary style={{fontFamily:"DM Sans,sans-serif",fontSize:15,fontWeight:500,color:T.textPri,cursor:"pointer",lineHeight:1.5}}>{q}</summary>
+              <p style={{fontFamily:"DM Sans,sans-serif",fontSize:14,color:T.textSec,lineHeight:1.7,margin:"12px 0 0",paddingLeft:4}}>{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
