@@ -8,14 +8,14 @@ import {
 const T = {
   pageBg:   "#F5F5F5",
   cardBg:   "#FFFFFF",
-  navBg:    "#1A1A1A",
+  navBg:    "#000000",
   textPri:  "#000000",
-  textSec:  "#4A4A4A",
-  textMute: "#4A4A4A",
-  gold:     "#D4A574",
-  border:   "rgba(0,0,0,0.09)",
-  shadow:   "0 1px 4px rgba(0,0,0,0.07)",
-  grid:     "rgba(0,0,0,0.05)",
+  textSec:  "#1A1A1A",
+  textMute: "#6B6B6B",
+  gold:     "#000000",
+  border:   "rgba(0,0,0,0.1)",
+  shadow:   "0 1px 3px rgba(0,0,0,0.08)",
+  grid:     "rgba(0,0,0,0.04)",
   north:    "#B8740A",
   mid:      "#1A5C8A",
   south:    "#2C6E35",
@@ -295,7 +295,7 @@ const ChartTip = ({ active, payload, label, fmt }) => {
   if (!active || !payload?.length) return null;
   return (
     <div style={{background:"#fff",border:"1px solid rgba(0,0,0,0.15)",borderRadius:4,padding:"12px 16px",boxShadow:"0 4px 12px rgba(0,0,0,0.1)",minWidth:180}}>
-      <div style={{fontFamily:"Playfair Display,serif",fontSize:18,fontWeight:600,color:T.textPri,marginBottom:8}}>{label}</div>
+      <div style={{fontFamily:"Montserrat,sans-serif",fontSize:18,fontWeight:600,color:T.textPri,marginBottom:8}}>{label}</div>
       {payload.filter(p=>p.value!=null).map((p,i)=>(
         <div key={i} style={{display:"flex",justifyContent:"space-between",gap:20,marginBottom:3}}>
           <span style={{fontFamily:"Montserrat,sans-serif",fontSize:14,color:T.textSec}}>{p.name}</span>
@@ -310,7 +310,7 @@ const ChartTip = ({ active, payload, label, fmt }) => {
 const Card = ({ title, sub, note, children }) => (
   <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,boxShadow:T.shadow,marginBottom:24}}>
     <div style={{padding:"22px 28px 0"}}>
-      <h3 style={{fontFamily:"Playfair Display,serif",fontSize:26,fontWeight:600,color:T.textPri,lineHeight:1.2,marginBottom:3,margin:"0 0 3px"}}>{title}</h3>
+      <h3 style={{fontFamily:"Montserrat,sans-serif",fontSize:26,fontWeight:300,color:T.textPri,lineHeight:1.2,letterSpacing:"0.08em",marginBottom:3,margin:"0 0 3px"}}>{title}</h3>
       {sub && <div style={{fontFamily:"Montserrat,sans-serif",fontSize:14,color:T.textMute,marginBottom:0}}>{sub}</div>}
     </div>
     <div style={{padding:"16px 28px 20px"}}>{children}</div>
@@ -346,7 +346,7 @@ const SalesBars = ({ data, keys, height=280, startYear=2006 }) => {
 const HIGHLIGHT_OFFSET = { north: -44, mid: -22, south: 18 };
 const SectionBanner = ({ title, sub }) => (
   <div style={{borderLeft:`4px solid ${T.gold}`,paddingLeft:16,marginBottom:24,marginTop:8}}>
-    <h2 style={{fontFamily:"Playfair Display,serif",fontSize:22,fontWeight:600,color:T.textPri,lineHeight:1.2,margin:0}}>{title}</h2>
+    <h2 style={{fontFamily:"Montserrat,sans-serif",fontSize:22,fontWeight:300,color:T.textPri,lineHeight:1.2,letterSpacing:"0.08em",margin:0}}>{title}</h2>
     {sub && <div style={{fontFamily:"Montserrat,sans-serif",fontSize:14,color:T.textMute,marginTop:3}}>{sub}</div>}
   </div>
 );
@@ -454,28 +454,28 @@ const ChartWrap = ({ children }) => (
 const StickyBar = () => (
   <div style={{
     position:"fixed",bottom:0,left:0,right:0,zIndex:200,
-    background:"rgba(26,22,16,0.93)",backdropFilter:"blur(8px)",
-    borderTop:"1px solid rgba(201,150,58,0.2)",
+    background:"rgba(0,0,0,0.95)",backdropFilter:"blur(8px)",
+    borderTop:"1px solid rgba(255,255,255,0.1)",
   }}>
     <div className="svmt-sticky-inner" style={{maxWidth:1100,margin:"0 auto",padding:"8px 28px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <div style={{display:"flex",alignItems:"center",gap:12}}>
-        <div style={{fontFamily:"Playfair Display,serif",fontSize:15,color:"#E8D9BF"}}>Jordan Jadallah</div>
+        <div style={{fontFamily:"Montserrat,sans-serif",fontSize:15,color:"#FFFFFF"}}>Jordan Jadallah</div>
         <div style={{width:1,height:14,background:"rgba(255,255,255,0.15)"}}/>
-        <div style={{fontFamily:"Montserrat,sans-serif",fontSize:12,color:"#7A6E60"}}>Berkshire Hathaway HomeServices · Sun Valley & Blaine County</div>
+        <div style={{fontFamily:"Montserrat,sans-serif",fontSize:12,color:"#999999"}}>Berkshire Hathaway HomeServices · Sun Valley & Blaine County</div>
       </div>
       <div style={{display:"flex",alignItems:"center",gap:16}}>
         <a href="https://www.linkedin.com/in/jordanjadallah/" target="_blank" rel="noopener noreferrer"
-          style={{fontFamily:"Montserrat,sans-serif",fontSize:12,color:"#7A6E60",textDecoration:"none",display:"flex",alignItems:"center",gap:5}}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="#7A6E60">
+          style={{fontFamily:"Montserrat,sans-serif",fontSize:12,color:"#999999",textDecoration:"none",display:"flex",alignItems:"center",gap:5}}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="#999999">
             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
           </svg>
           LinkedIn
         </a>
         <a href="mailto:jordan@jordanjadallah.com"
-          style={{fontFamily:"Montserrat,sans-serif",fontSize:12,color:"#7A6E60",textDecoration:"none"}}>
+          style={{fontFamily:"Montserrat,sans-serif",fontSize:12,color:"#999999",textDecoration:"none"}}>
           jordan@jordanjadallah.com
         </a>
-        <div style={{fontFamily:"Montserrat,sans-serif",fontSize:12,color:"rgba(122,110,96,0.5)"}}>sunvalleymarkettrends.com</div>
+        <div style={{fontFamily:"Montserrat,sans-serif",fontSize:12,color:"rgba(255,255,255,0.4)"}}>sunvalleymarkettrends.com</div>
       </div>
     </div>
   </div>
@@ -488,7 +488,7 @@ const Stat = ({ label, value, sub, change, color }) => {
     <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,padding:"20px 24px",boxShadow:T.shadow}}>
       {color && <div style={{width:36,height:4,background:color,borderRadius:2,marginBottom:12}}/>}
       <div style={{fontFamily:"Montserrat,sans-serif",fontSize:13,color:T.textMute,letterSpacing:"0.04em",textTransform:"uppercase",marginBottom:8}}>{label}</div>
-      <div style={{fontFamily:"Playfair Display,serif",fontSize:32,fontWeight:600,color:T.textPri,lineHeight:1}}>{value}</div>
+      <div style={{fontFamily:"Montserrat,sans-serif",fontSize:32,fontWeight:300,color:T.textPri,lineHeight:1,letterSpacing:"0.08em"}}>{value}</div>
       {sub && <div style={{fontFamily:"Montserrat,sans-serif",fontSize:12,color:T.textMute,marginTop:4}}>{sub}</div>}
       {change != null && (
         <div style={{fontFamily:"Montserrat,sans-serif",fontSize:13,color:up?"#2C6E35":"#A32D2D",marginTop:8,fontWeight:500}}>
@@ -528,8 +528,8 @@ const Nav = ({ tab, setTab }) => {
     <nav style={{background:T.navBg,borderBottom:"1px solid rgba(255,255,255,0.08)",position:"sticky",top:0,zIndex:100}}>
       <div className="svmt-nav-inner" style={{maxWidth:1100,margin:"0 auto",padding:"0 40px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div style={{display:"flex",alignItems:"baseline",gap:10,padding:"16px 0",flexShrink:0}}>
-          <span style={{fontFamily:"Playfair Display,serif",fontSize:20,fontWeight:600,color:"#E8D9BF",letterSpacing:"0.06em"}}>SUN VALLEY</span>
-          <span style={{fontFamily:"Montserrat,sans-serif",fontSize:11,color:"#7A6E60",letterSpacing:"0.2em",textTransform:"uppercase"}}>Market Trends</span>
+          <span style={{fontFamily:"Montserrat,sans-serif",fontSize:20,fontWeight:300,color:"#FFFFFF",letterSpacing:"0.08em"}}>SUN VALLEY</span>
+          <span style={{fontFamily:"Montserrat,sans-serif",fontSize:11,color:"#999999",letterSpacing:"0.2em",textTransform:"uppercase"}}>Market Trends</span>
         </div>
         {/* Desktop tabs */}
         <div className="svmt-nav-desktop" style={{display:"flex",gap:2,alignItems:"center"}}>
@@ -537,7 +537,7 @@ const Nav = ({ tab, setTab }) => {
             <button key={t.id} onClick={()=>setTab(t.id)} style={{
               background:"none",border:"none",cursor:"pointer",
               fontFamily:"Montserrat,sans-serif",fontSize:13,letterSpacing:"0.06em",textTransform:"uppercase",
-              color:tab===t.id?"#E8D9BF":"#7A6E60",
+              color:tab===t.id?"#FFFFFF":"#999999",
               borderBottom:tab===t.id?"2px solid #B8740A":"2px solid transparent",
               padding:"16px 16px",transition:"color 0.15s",whiteSpace:"nowrap"
             }}>{t.label}</button>
@@ -547,7 +547,7 @@ const Nav = ({ tab, setTab }) => {
         <button className="svmt-nav-burger" onClick={()=>setMenuOpen(!menuOpen)} style={{
           display:"none",background:"none",border:"none",cursor:"pointer",padding:"8px",
         }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8D9BF" strokeWidth="2" strokeLinecap="round">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round">
             {menuOpen
               ? <><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></>
               : <><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></>
@@ -565,7 +565,7 @@ const Nav = ({ tab, setTab }) => {
             <button key={t.id} onClick={()=>{setTab(t.id);setMenuOpen(false);}} style={{
               background:"none",border:"none",cursor:"pointer",textAlign:"left",
               fontFamily:"Montserrat,sans-serif",fontSize:14,letterSpacing:"0.06em",textTransform:"uppercase",
-              color:tab===t.id?"#E8D9BF":"#7A6E60",
+              color:tab===t.id?"#FFFFFF":"#999999",
               padding:"12px 8px",
               borderLeft:tab===t.id?"3px solid #B8740A":"3px solid transparent",
               transition:"color 0.15s",
@@ -581,7 +581,7 @@ const Nav = ({ tab, setTab }) => {
 const Hero = ({ lastUpdated }) => (
   <div className="svmt-hero" style={{background:T.cardBg,borderBottom:`1px solid ${T.border}`,padding:"48px 40px 36px",textAlign:"center"}}>
     <div style={{fontFamily:"Montserrat,sans-serif",fontSize:13,color:T.gold,letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:12}}>Blaine County, Idaho</div>
-    <h1 style={{fontFamily:"Playfair Display,serif",fontSize:52,fontWeight:400,color:T.textPri,letterSpacing:"0.01em",margin:"0 0 12px",lineHeight:1.1}}>
+    <h1 style={{fontFamily:"Montserrat,sans-serif",fontSize:52,fontWeight:300,color:T.textPri,letterSpacing:"0.08em",margin:"0 0 12px",lineHeight:1.1}}>
       Sun Valley Real Estate Market Trends
     </h1>
     <p style={{fontFamily:"Montserrat,sans-serif",fontSize:15,color:T.textMute,margin:"0 0 24px"}}>
@@ -688,7 +688,7 @@ const Overview = ({ data }) => {
           <div key={v.key} style={{background:T.cardBg,padding:"24px 28px",borderLeft:i>0?`1px solid ${T.border}`:"none"}}>
             <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20,paddingBottom:16,borderBottom:`1px solid ${T.border}`}}>
               <div style={{width:4,height:28,background:v.color,borderRadius:2}}/>
-              <div style={{fontFamily:"Playfair Display,serif",fontSize:22,fontWeight:600,color:T.textPri}}>{v.label}</div>
+              <div style={{fontFamily:"Montserrat,sans-serif",fontSize:22,fontWeight:300,color:T.textPri,letterSpacing:"0.08em"}}>{v.label}</div>
             </div>
             {[
               {label:"SFH Median",    val:fmtPrice(v.sfh),   chg:pctChg(v.sfh,v.sfhPrev)},
@@ -772,7 +772,7 @@ const Overview = ({ data }) => {
       {/* FAQ Section */}
       <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,boxShadow:T.shadow,marginBottom:24,marginTop:32}}>
         <div style={{padding:"28px 28px 0"}}>
-          <h2 style={{fontFamily:"Playfair Display,serif",fontSize:28,fontWeight:600,color:T.textPri,margin:"0 0 4px"}}>Sun Valley Real Estate FAQ</h2>
+          <h2 style={{fontFamily:"Montserrat,sans-serif",fontSize:28,fontWeight:300,color:T.textPri,letterSpacing:"0.08em",margin:"0 0 4px"}}>Sun Valley Real Estate FAQ</h2>
           <div style={{fontFamily:"Montserrat,sans-serif",fontSize:14,color:T.textMute,marginBottom:20}}>Common questions about the Blaine County, Idaho real estate market</div>
         </div>
         <div style={{padding:"0 28px 28px"}}>
@@ -817,7 +817,7 @@ const ValleyTab = ({ data, valley, label, sub, hasCondo, hasTownhome }) => {
     <div className="svmt-section" style={{padding:"32px 40px"}}>
       {/* Header banner */}
       <div style={{background:T.cardBg,border:`1px solid ${T.border}`,borderRadius:8,padding:"24px 28px",marginBottom:24,boxShadow:T.shadow,borderLeft:`5px solid ${color}`}}>
-        <div style={{fontFamily:"Playfair Display,serif",fontSize:28,fontWeight:600,color:T.textPri,marginBottom:4}}>{label}</div>
+        <div style={{fontFamily:"Montserrat,sans-serif",fontSize:28,fontWeight:300,color:T.textPri,letterSpacing:"0.08em",marginBottom:4}}>{label}</div>
         <div style={{fontFamily:"Montserrat,sans-serif",fontSize:14,color:T.textMute}}>{sub}</div>
       </div>
 
@@ -925,10 +925,10 @@ const Footer = () => (
     {/* CTA Band */}
     <div className="svmt-footer" style={{background:T.navBg,padding:"40px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:24}}>
       <div style={{maxWidth:520}}>
-        <div style={{fontFamily:"Playfair Display,serif",fontSize:28,fontWeight:400,color:"#E8D9BF",marginBottom:8,lineHeight:1.2}}>
+        <div style={{fontFamily:"Montserrat,sans-serif",fontSize:28,fontWeight:300,color:"#FFFFFF",letterSpacing:"0.08em",marginBottom:8,lineHeight:1.2}}>
           Want more Sun Valley market insights?
         </div>
-        <div style={{fontFamily:"Montserrat,sans-serif",fontSize:15,color:"#9A8E80",lineHeight:1.6}}>
+        <div style={{fontFamily:"Montserrat,sans-serif",fontSize:15,color:"#999999",lineHeight:1.6}}>
           Follow me on LinkedIn for regular market updates, new data as it's published, and local real estate commentary — or reach out directly with any questions.
         </div>
       </div>
@@ -942,17 +942,17 @@ const Footer = () => (
         </a>
         <a href="mailto:jordan@jordanjadallah.com"
           style={{display:"flex",alignItems:"center",gap:10,background:"transparent",border:"1px solid rgba(255,255,255,0.2)",borderRadius:4,padding:"12px 22px",textDecoration:"none"}}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A8E80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999999" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
           </svg>
-          <span style={{fontFamily:"Montserrat,sans-serif",fontSize:14,color:"#9A8E80"}}>jordan@jordanjadallah.com</span>
+          <span style={{fontFamily:"Montserrat,sans-serif",fontSize:14,color:"#999999"}}>jordan@jordanjadallah.com</span>
         </a>
       </div>
     </div>
     {/* Footer bar */}
     <div style={{background:T.cardBg,borderTop:`1px solid ${T.border}`,padding:"20px 40px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
       <div>
-        <span style={{fontFamily:"Playfair Display,serif",fontSize:17,color:T.textPri}}>Jordan Jadallah</span>
+        <span style={{fontFamily:"Montserrat,sans-serif",fontSize:17,color:T.textPri}}>Jordan Jadallah</span>
         <span style={{fontFamily:"Montserrat,sans-serif",fontSize:13,color:T.textMute,marginLeft:12}}>Berkshire Hathaway HomeServices · Sun Valley & Blaine County, Idaho</span>
       </div>
       <div style={{fontFamily:"Montserrat,sans-serif",fontSize:13,color:T.textMute}}>
@@ -973,7 +973,7 @@ export default function App() {
 
   return (
     <div style={{minHeight:"100vh",background:T.pageBg,paddingBottom:52}}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap');*{box-sizing:border-box;margin:0;padding:0;}input,button{font-family:inherit}::-webkit-scrollbar{width:6px;background:#F5F5F5}::-webkit-scrollbar-thumb{background:#C8B89A;border-radius:3px}@media(max-width:768px){.svmt-snap-grid{grid-template-columns:1fr!important}.svmt-snap-grid>div{border-left:none!important;border-top:1px solid rgba(0,0,0,0.09)}.svmt-snap-grid>div:first-child{border-top:none}.svmt-nav-desktop{display:none!important}.svmt-nav-burger{display:block!important}.svmt-nav-mobile{display:flex!important}.svmt-section{padding:20px 16px!important}.svmt-hero{padding:32px 16px 24px!important}.svmt-hero h1{font-size:32px!important}.svmt-nav-inner{padding:0 16px!important}.svmt-footer{padding:24px 16px!important}.svmt-sticky-inner{padding:8px 16px!important;flex-direction:column;gap:8px!important;text-align:center}}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');*{box-sizing:border-box;margin:0;padding:0;}input,button{font-family:inherit}::-webkit-scrollbar{width:6px;background:#F5F5F5}::-webkit-scrollbar-thumb{background:#999999;border-radius:3px}@media(max-width:768px){.svmt-snap-grid{grid-template-columns:1fr!important}.svmt-snap-grid>div{border-left:none!important;border-top:1px solid rgba(0,0,0,0.09)}.svmt-snap-grid>div:first-child{border-top:none}.svmt-nav-desktop{display:none!important}.svmt-nav-burger{display:block!important}.svmt-nav-mobile{display:flex!important}.svmt-section{padding:20px 16px!important}.svmt-hero{padding:32px 16px 24px!important}.svmt-hero h1{font-size:32px!important}.svmt-nav-inner{padding:0 16px!important}.svmt-footer{padding:24px 16px!important}.svmt-sticky-inner{padding:8px 16px!important;flex-direction:column;gap:8px!important;text-align:center}}`}</style>
       <Nav tab={tab} setTab={setTab}/>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <Hero lastUpdated={data.lastUpdated}/>
