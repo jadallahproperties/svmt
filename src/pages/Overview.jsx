@@ -261,7 +261,7 @@ const Overview = ({ data, csvData }) => {
           {/* ─── Size & Segments ──────────────────────────────────────────── */}
           <SectionBanner title="Size & Segments" sub="How home size and price tiers shape the market"/>
 
-          <Card title="Median Home Size by Area" sub="Median finished square footage of closed sales by area">
+          <Card title="Median Home Size by Area" sub="Median finished square footage of closed single-family home sales by area">
             <HorizontalBar data={csvData.medianSqftByArea} fmt={v=>`${v.toLocaleString()} sqft`} color="#6B6B6B"/>
           </Card>
 
