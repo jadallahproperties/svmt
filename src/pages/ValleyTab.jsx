@@ -4,7 +4,7 @@ import { SingleLine, SalesBars, VolumeBars } from "../components/charts";
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 const fmtPrice = v => {
-  if (v == null) return "\u2014";
+  if (v == null) return "—";
   if (v >= 1000000) return `$${(v/1000000).toFixed(2).replace(/\.?0+$/,"")}M`;
   return `$${Math.round(v/1000)}K`;
 };
@@ -49,7 +49,7 @@ const ValleyTab = ({ data, valley, label, sub, hasCondo, hasTownhome }) => {
       </div>
 
       {/* Price charts */}
-      <Card title="Single Family Homes \u2014 Median Sale Price" sub={`${label} \u00b7 2006\u20132026`}
+      <Card title="Single Family Homes  — Median Sale Price" sub={`${label} · 2006–2026`}
         note="Median sold price of all closed single-family home sales. Source: SVBOR.">
         <SingleLine data={data.sfh} dataKey={valley} fmt={fmtPrice} highlight/>
       </Card>
@@ -57,12 +57,12 @@ const ValleyTab = ({ data, valley, label, sub, hasCondo, hasTownhome }) => {
       {hasCondo || hasTownhome ? (
         <div style={{display:"flex",flexDirection:"column",gap:24}}>
           {hasCondo && (
-            <Card title="Condos \u2014 Median Sale Price" sub={`${label} \u00b7 2006\u20132026`}>
+            <Card title="Condos  — Median Sale Price" sub={`${label} · 2006–2026`}>
               <SingleLine data={data.condos} dataKey={valley} fmt={fmtPrice} highlight/>
             </Card>
           )}
           {hasTownhome && (
-            <Card title="Townhomes \u2014 Median Sale Price" sub={`${label} \u00b7 2006\u20132026`}>
+            <Card title="Townhomes  — Median Sale Price" sub={`${label} · 2006–2026`}>
               <SingleLine data={data.townhomes} dataKey={valley} fmt={fmtPrice} highlight/>
             </Card>
           )}
@@ -75,55 +75,55 @@ const ValleyTab = ({ data, valley, label, sub, hasCondo, hasTownhome }) => {
 
       {/* Indicators */}
       <div style={{display:"flex",flexDirection:"column",gap:24}}>
-        <Card title="Days on Market" sub={`${label} \u00b7 2006\u20132026`}
+        <Card title="Days on Market" sub={`${label} · 2006–2026`}
           note="Median days from original list date to contract date.">
           <SingleLine data={data.dom} dataKey={valley} fmt={v=>`${v} days`} yDomain={[0,380]} highlight/>
         </Card>
-        <Card title="Sale-to-List Ratio" sub={`${label} \u00b7 2006\u20132026`}
+        <Card title="Sale-to-List Ratio" sub={`${label} · 2006–2026`}
           note="Percentage of list price received at close. Above 100% = bidding war.">
           <SingleLine data={data.stl} dataKey={valley} fmt={v=>`${parseFloat(v).toFixed(1)}%`} yDomain={[85,103]} refVal={100} refLabel="100% = full list price" highlight/>
         </Card>
       </div>
 
       {/* Price per sq ft by sub-type */}
-      <SectionBanner title="Price per Square Foot" sub={`${label} \u00b7 separated by property type \u00b7 2006\u20132026`}/>
+      <SectionBanner title="Price per Square Foot" sub={`${label} · separated by property type · 2006–2026`}/>
       {valley === "mid" ? (
-        <Card title="Price per Square Foot \u2014 Single Family" sub={`${label} \u00b7 2006\u20132026`}
+        <Card title="Price per Square Foot  — Single Family" sub={`${label} · 2006–2026`}
           note="Mid Valley condo and townhome PSF data is too sparse for a reliable annual median.">
           <SingleLine data={data.psfSfh} dataKey={valley} fmt={v=>`$${v}/sqft`} highlight/>
         </Card>
       ) : (
         <>
-          <Card title="Price per Square Foot \u2014 Single Family" sub={`${label} \u00b7 2006\u20132026`}>
+          <Card title="Price per Square Foot  — Single Family" sub={`${label} · 2006–2026`}>
             <SingleLine data={data.psfSfh} dataKey={valley} fmt={v=>`$${v}/sqft`} highlight/>
           </Card>
           <div style={{display:"flex",flexDirection:"column",gap:24}}>
-            <Card title="Price per Square Foot \u2014 Condos" sub={`${label} \u00b7 2006\u20132026`}>
+            <Card title="Price per Square Foot  — Condos" sub={`${label} · 2006–2026`}>
               <SingleLine data={data.psfCondo} dataKey={valley} fmt={v=>`$${v}/sqft`} highlight/>
             </Card>
-            <Card title="Price per Square Foot \u2014 Townhomes" sub={`${label} \u00b7 2006\u20132026`}>
+            <Card title="Price per Square Foot  — Townhomes" sub={`${label} · 2006–2026`}>
               <SingleLine data={data.psfTownhome} dataKey={valley} fmt={v=>`$${v}/sqft`} highlight/>
             </Card>
           </div>
         </>
       )}
 
-      <Card title="Listing Volume" sub={`${label} \u00b7 new vs. sold listings \u00b7 2006\u20132026`}
+      <Card title="Listing Volume" sub={`${label} · new vs. sold listings · 2006–2026`}
         note="New listings by list date. Sold listings by close date. 2026 is a partial year.">
         <VolumeBars volumeData={data.volume} valley={valley}/>
       </Card>
-      <SectionBanner title="Number of Sales" sub={`${label} \u00b7 closed transactions by property type \u00b7 2016\u20132026`}/>
-      <Card title="Single Family Home Sales" sub={`${label} \u00b7 2006\u20132026`}
-        note="Count of closed single-family home sales 2016\u20132026. 2026 is a partial year.">
+      <SectionBanner title="Number of Sales" sub={`${label} · closed transactions by property type · 2016–2026`}/>
+      <Card title="Single Family Home Sales" sub={`${label} · 2006–2026`}
+        note="Count of closed single-family home sales 2016–2026. 2026 is a partial year.">
         <SalesBars data={data.salesSfh} keys={[valley]} startYear={2016}/>
       </Card>
       {hasCondo && (
-        <Card title="Condo Sales" sub={`${label} \u00b7 2006\u20132026`}>
+        <Card title="Condo Sales" sub={`${label} · 2006–2026`}>
           <SalesBars data={data.salesCondo} keys={[valley]} startYear={2016}/>
         </Card>
       )}
       {hasTownhome && (
-        <Card title="Townhome Sales" sub={`${label} \u00b7 2006\u20132026`}>
+        <Card title="Townhome Sales" sub={`${label} · 2006–2026`}>
           <SalesBars data={data.salesTownhome} keys={[valley]} startYear={2016}/>
         </Card>
       )}

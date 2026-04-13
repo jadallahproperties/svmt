@@ -4,7 +4,7 @@ import { CompareLines, SalesBars, DollarVolumeChart, MonthlyBars, HorizontalBar,
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 const fmtPrice = v => {
-  if (v == null) return "\u2014";
+  if (v == null) return "—";
   if (v >= 1000000) return `$${(v/1000000).toFixed(2).replace(/\.?0+$/,"")}M`;
   return `$${Math.round(v/1000)}K`;
 };
@@ -47,7 +47,7 @@ const Overview = ({ data, csvData }) => {
               ...(csvData?.valleySnapshots?.[v.key] ? [
                 {label:"Median $/sqft",      val:`$${csvData.valleySnapshots[v.key].psfMedian}/sqft`, chg:null},
                 {label:"Active Listings",    val:`${csvData.valleySnapshots[v.key].activeCount}`,     chg:null},
-                {label:"Sale/Orig List",     val:csvData.valleySnapshots[v.key].stolAvg ? `${csvData.valleySnapshots[v.key].stolAvg}%` : "\u2014", chg:null},
+                {label:"Sale/Orig List",     val:csvData.valleySnapshots[v.key].stolAvg ? `${csvData.valleySnapshots[v.key].stolAvg}%` : "—", chg:null},
               ] : []),
             ].map(({label,val,chg,note})=>{
               const up = parseFloat(chg)>=0;
@@ -67,55 +67,55 @@ const Overview = ({ data, csvData }) => {
       </div>
 
       {/* Comparison charts */}
-      <Card title="Single Family \u2014 Median Sale Price" sub={`All three valleys compared \u00b7 2006\u2013${sfhL.year}`}>
+      <Card title="Single Family  — Median Sale Price" sub={`All three valleys compared · 2006–${sfhL.year}`}>
         <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"mid",label:"Mid Valley"},{key:"south",label:"South Valley"}]}/>
         <CompareLines data={data.sfh} keys={["north","mid","south"]} fmt={fmtPrice} highlight/>
       </Card>
       <div style={{display:"flex",flexDirection:"column",gap:24}}>
-        <Card title="Days on Market" sub="All three valleys compared \u00b7 2006\u20132026">
+        <Card title="Days on Market" sub="All three valleys compared · 2006–2026">
           <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"mid",label:"Mid Valley"},{key:"south",label:"South Valley"}]}/>
           <CompareLines data={data.dom} keys={["north","mid","south"]} fmt={v=>`${v} days`} yDomain={[0,380]} height={300} highlight/>
         </Card>
-        <Card title="Sale-to-List Ratio" sub="All three valleys compared \u00b7 2006\u20132026">
+        <Card title="Sale-to-List Ratio" sub="All three valleys compared · 2006–2026">
           <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"mid",label:"Mid Valley"},{key:"south",label:"South Valley"}]}/>
           <CompareLines data={data.stl} keys={["north","mid","south"]} fmt={v=>`${parseFloat(v).toFixed(1)}%`} yDomain={[85,103]} refVal={100} refLabel="100% = full price" height={300} highlight/>
         </Card>
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:24}}>
-      <SectionBanner title="Price per Square Foot" sub="Separated by property type \u00b7 all closed sales \u00b7 2006\u20132026"/>
-        <Card title="Price / Sq Ft \u2014 Single Family" sub="All three valleys \u00b7 2006\u20132026">
+      <SectionBanner title="Price per Square Foot" sub="Separated by property type · all closed sales · 2006–2026"/>
+        <Card title="Price / Sq Ft  — Single Family" sub="All three valleys · 2006–2026">
           <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"mid",label:"Mid Valley"},{key:"south",label:"South Valley"}]}/>
           <CompareLines data={data.psfSfh} keys={["north","mid","south"]} fmt={v=>`$${v}/sqft`} height={300} highlight/>
         </Card>
-        <Card title="Price / Sq Ft \u2014 Condos" sub="North & South Valley \u00b7 2006\u20132026"
+        <Card title="Price / Sq Ft  — Condos" sub="North & South Valley · 2006–2026"
           note="Mid Valley has insufficient annual condo volume for a reliable median.">
           <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"south",label:"South Valley"}]}/>
           <CompareLines data={data.psfCondo} keys={["north","south"]} fmt={v=>`$${v}/sqft`} height={300} highlight/>
         </Card>
-        <Card title="Price / Sq Ft \u2014 Townhomes" sub="North & South Valley \u00b7 2006\u20132026"
+        <Card title="Price / Sq Ft  — Townhomes" sub="North & South Valley · 2006–2026"
           note="Mid Valley has insufficient annual townhome volume for a reliable median.">
           <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"south",label:"South Valley"}]}/>
           <CompareLines data={data.psfTownhome} keys={["north","south"]} fmt={v=>`$${v}/sqft`} height={300} highlight/>
         </Card>
       </div>
-      <SectionBanner title="Number of Sales" sub="Closed transactions by property type \u00b7 2016\u20132026"/>
-      <Card title="Single Family Home Sales" sub="All three valleys \u00b7 2006\u20132026"
-        note="Count of closed single-family home sales 2016\u20132026. 2026 is a partial year.">
+      <SectionBanner title="Number of Sales" sub="Closed transactions by property type · 2016–2026"/>
+      <Card title="Single Family Home Sales" sub="All three valleys · 2006–2026"
+        note="Count of closed single-family home sales 2016–2026. 2026 is a partial year.">
         <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"mid",label:"Mid Valley"},{key:"south",label:"South Valley"}]}/>
         <SalesBars data={data.salesSfh} keys={["north","mid","south"]} startYear={2016}/>
       </Card>
-      <Card title="Condo Sales" sub="North & South Valley \u00b7 2006\u20132026"
+      <Card title="Condo Sales" sub="North & South Valley · 2006–2026"
         note="Mid Valley has negligible annual condo volume.">
         <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"south",label:"South Valley"}]}/>
         <SalesBars data={data.salesCondo} keys={["north","south"]} startYear={2016}/>
       </Card>
-      <Card title="Townhome Sales" sub="North & South Valley \u00b7 2006\u20132026"
+      <Card title="Townhome Sales" sub="North & South Valley · 2006–2026"
         note="Mid Valley has negligible annual townhome volume.">
         <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"south",label:"South Valley"}]}/>
         <SalesBars data={data.salesTownhome} keys={["north","south"]} startYear={2016}/>
       </Card>
-      <SectionBanner title="Total Dollar Volume" sub="Estimated total value of all properties sold \u00b7 by valley \u00b7 2006\u20132026"/>
-      <Card title="Total Dollar Volume by Valley" sub="Sum of all sold prices \u00b7 SFH + Condo + Townhome \u00b7 2006\u20132026"
+      <SectionBanner title="Total Dollar Volume" sub="Estimated total value of all properties sold · by valley · 2006–2026"/>
+      <Card title="Total Dollar Volume by Valley" sub="Sum of all sold prices · SFH + Condo + Townhome · 2006–2026"
         note="Total dollar volume is the sum of all closed sale prices for each valley. 2026 is a partial year.">
         <LegendRow valleys={[{key:"north",label:"North Valley"},{key:"mid",label:"Mid Valley"},{key:"south",label:"South Valley"}]}/>
         <DollarVolumeChart/>
@@ -134,9 +134,9 @@ const Overview = ({ data, csvData }) => {
             {q:"How has the Sun Valley real estate market changed since 2020?",
              a:"The Sun Valley market saw dramatic price appreciation from 2020 to 2023, with North Valley SFH medians rising from $1.93M to $4.0M. Prices have since stabilized, with North Valley at $3.65M in early 2026. Total dollar volume across all valleys peaked at over $900M in 2020 and remains elevated compared to pre-pandemic levels."},
             {q:"What is the average days on market in Blaine County, Idaho?",
-             a:"As of Q1 2026, properties in North Valley average 99 days on market, Mid Valley averages 79 days, and South Valley averages 101 days. These figures have increased from the historic lows of 2021\u20132022, when properties were selling in 50\u201365 days, reflecting a return toward more balanced market conditions."},
+             a:"As of Q1 2026, properties in North Valley average 99 days on market, Mid Valley averages 79 days, and South Valley averages 101 days. These figures have increased from the historic lows of 2021–2022, when properties were selling in 50–65 days, reflecting a return toward more balanced market conditions."},
             {q:"What is the difference between North Valley, Mid Valley, and South Valley?",
-             a:"North Valley includes Ketchum and Sun Valley \u2014 the luxury core with the highest prices and closest proximity to Sun Valley Resort. Mid Valley is the rural corridor between Ketchum and Hailey with limited inventory. South Valley encompasses Hailey and Bellevue, offering more affordable options and the largest transaction volume in the county."},
+             a:"North Valley includes Ketchum and Sun Valley  — the luxury core with the highest prices and closest proximity to Sun Valley Resort. Mid Valley is the rural corridor between Ketchum and Hailey with limited inventory. South Valley encompasses Hailey and Bellevue, offering more affordable options and the largest transaction volume in the county."},
             {q:"How many homes sell each year in Sun Valley and Blaine County?",
              a:"In 2025, there were approximately 219 total closed residential sales in North Valley, 38 in Mid Valley, and 179 in South Valley across all property types (single-family homes, condos, and townhomes). Transaction volume peaked in 2020 with over 780 sales countywide."},
           ].map(({q,a},i)=>(
@@ -199,7 +199,7 @@ const Overview = ({ data, csvData }) => {
             <MonthlyBars data={csvData.monthlyActiveInventory} color="#B8740A"/>
           </Card>
 
-          <Card title="Sales by Area \u2014 Trailing 12 Months" sub="Share of closed sales by geographic area">
+          <Card title="Sales by Area  — Trailing 12 Months" sub="Share of closed sales by geographic area">
             <MarketPie data={csvData.salesByArea}/>
           </Card>
 
