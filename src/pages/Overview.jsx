@@ -238,7 +238,7 @@ const Overview = ({ data, csvData }) => {
             <MonthlyBars data={csvData.monthlyAbsorptionRate} dataKey="rate" fmt={v=>`${v}%`} color="#B8740A"/>
           </Card>
 
-          <Card title="Homes Closing Over List Price" sub="Percentage of sales that closed above the original list price">
+          <Card title="Homes Closing Over List Price" sub="Percentage of sales that closed above the original asking price">
             <AreaFill data={csvData.overbiddingByMonth} fmt={v=>`${v}%`} color="#B8740A"/>
           </Card>
 

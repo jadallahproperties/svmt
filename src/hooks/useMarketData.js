@@ -327,7 +327,7 @@ function overbiddingByMonth(sold) {
   const groups = groupBy(sold, r => getMonth(r.soldDate));
   return Object.entries(groups)
     .map(([m, rows]) => {
-      const over = rows.filter(r => r.soldPrice > r.listPrice).length;
+      const over = rows.filter(r => r.origListPrice && r.soldPrice > r.origListPrice).length;
       return { month: m, label: fmtMonthLabel(m), pct: Math.round(over / rows.length * 1000) / 10 };
     })
     .sort((a, b) => a.month.localeCompare(b.month));
