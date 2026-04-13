@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { T, VALLEY_COLOR } from "../theme";
 import { Card, SectionBanner, LegendRow } from "../components/layout";
 import { CompareLines, SalesBars, DollarVolumeChart, MonthlyBars, HorizontalBar, DualHorizontalBar, FilteredHorizontalBar, FilteredDualHorizontalBar, GroupedBars, MarketPie, AreaFill, LabeledBars, MonthlyLine } from "../components/charts";
@@ -9,6 +10,35 @@ const fmtPrice = v => {
   return `$${Math.round(v/1000)}K`;
 };
 const pctChg = (cur, prev) => (prev && cur) ? (((cur-prev)/prev)*100).toFixed(1) : null;
+
+// ─── OVERBIDDING CARD (per valley, with sub-type toggle) ─────────────────────
+const PROP_TYPES = [
+  { key: "all", label: "All" },
+  { key: "sfh", label: "SFH" },
+  { key: "condo", label: "Condo" },
+  { key: "townhome", label: "Townhome" },
+];
+
+const OverbiddingCard = ({ valley, label, color, data }) => {
+  const [propType, setPropType] = useState("all");
+  const chartData = data?.[propType] || [];
+  return (
+    <Card title={`Overbidding — ${label}`} sub="% of sales closing above original asking price">
+      <div style={{display:"flex",gap:4,marginBottom:4}}>
+        {PROP_TYPES.map(t => (
+          <button key={t.key} onClick={() => setPropType(t.key)} style={{
+            fontFamily:"Montserrat,sans-serif",fontSize:12,fontWeight:propType===t.key?600:400,
+            background:propType===t.key?color:"transparent",
+            color:propType===t.key?"#fff":T.textMute,
+            border:`1px solid ${propType===t.key?color:T.border}`,
+            borderRadius:4,padding:"4px 12px",cursor:"pointer",
+          }}>{t.label}</button>
+        ))}
+      </div>
+      <AreaFill data={chartData} fmt={v=>`${v}%`} color={color}/>
+    </Card>
+  );
+};
 
 // ─── OVERVIEW ────────────────────────────────────────────────────────────────
 const Overview = ({ data, csvData }) => {
@@ -238,9 +268,10 @@ const Overview = ({ data, csvData }) => {
             <MonthlyBars data={csvData.monthlyAbsorptionRate} dataKey="rate" fmt={v=>`${v}%`} color="#B8740A"/>
           </Card>
 
-          <Card title="Homes Closing Over List Price" sub="Percentage of sales that closed above the original asking price">
-            <AreaFill data={csvData.overbiddingByMonth} fmt={v=>`${v}%`} color="#B8740A"/>
-          </Card>
+          {["north","mid","south"].map(v => {
+            const names = {north:"North Valley",mid:"Mid Valley",south:"South Valley"};
+            return <OverbiddingCard key={v} valley={v} label={names[v]} color={VALLEY_COLOR[v]} data={csvData.overbiddingByMonth[v]}/>;
+          })}
 
           <Card title="Average Sale-to-Original-List Price %" sub="How close final sale prices are to original asking prices">
             <MonthlyBars data={csvData.avgStolByMonth} dataKey="value" fmt={v=>`${v}%`} color="#1A5C8A"/>

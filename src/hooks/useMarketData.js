@@ -322,9 +322,12 @@ function monthlyAbsorptionRate(sold, allRows) {
   });
 }
 
-// Chart 18: % closing over list price by month
-function overbiddingByMonth(sold) {
-  const groups = groupBy(sold, r => getMonth(r.soldDate));
+// Chart 18: % closing over list price by month (filterable by valley + propType)
+function overbiddingByMonth(sold, valley=null, propType=null) {
+  let filtered = sold;
+  if (valley) filtered = filtered.filter(r => r.valleyKey === valley);
+  if (propType) filtered = filtered.filter(r => r.propType === propType);
+  const groups = groupBy(filtered, r => getMonth(r.soldDate));
   return Object.entries(groups)
     .map(([m, rows]) => {
       const withOrig = rows.filter(r => r.origListPrice);
@@ -332,6 +335,21 @@ function overbiddingByMonth(sold) {
       return { month: m, label: fmtMonthLabel(m), pct: withOrig.length > 0 ? Math.round(over / withOrig.length * 1000) / 10 : 0 };
     })
     .sort((a, b) => a.month.localeCompare(b.month));
+}
+
+function overbiddingMatrix(sold) {
+  const valleys = [null, "north", "mid", "south"];
+  const types = [null, "sfh", "condo", "townhome"];
+  const result = {};
+  for (const v of valleys) {
+    const vKey = v || "all";
+    result[vKey] = {};
+    for (const t of types) {
+      const tKey = t || "all";
+      result[vKey][tKey] = overbiddingByMonth(sold, v, t);
+    }
+  }
+  return result;
 }
 
 // Chart 19: Avg sale-to-original-list % by month
@@ -457,7 +475,7 @@ export default function useMarketData() {
       ytdByPriceSegment: ytdByPriceSegment(sold),
       listingsByPropertyType: listingsByPropertyType(sold),
       monthlyAbsorptionRate: monthlyAbsorptionRate(sold, rawRows),
-      overbiddingByMonth: overbiddingByMonth(sold),
+      overbiddingByMonth: overbiddingMatrix(sold),
       avgStolByMonth: avgStolByMonth(sold),
       priceReductionsByMonth: priceReductionsByMonth(rawRows),
       medianDomByMonth: medianDomByMonth(sold),
