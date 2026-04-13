@@ -385,3 +385,53 @@ export const MonthlyLine = ({ data, dataKey="count", color="#1A5C8A", fmt, heigh
     </div>
   );
 };
+
+// ─── FILTERED HORIZONTAL BAR (with time period selector) ─────────────────────
+export const FilteredHorizontalBar = ({ dataByPeriod, dataKey="value", color="#1A5C8A", fmt, nameKey="name", defaultMonths=24 }) => {
+  const [months, setMonths] = useState(defaultMonths);
+  const data = dataByPeriod[months] || dataByPeriod[12] || [];
+  const h = Math.max(250, data.length * 32);
+  return (
+    <div>
+      <TimePeriodFilter value={months} onChange={setMonths}/>
+      <ChartWrap>
+        <ResponsiveContainer width="100%" height={h}>
+          <BarChart data={data} layout="vertical" margin={{top:4,right:24,left:8,bottom:0}} barCategoryGap="25%">
+            <CartesianGrid strokeDasharray="4 4" stroke={T.grid} horizontal={false}/>
+            <XAxis type="number" tickFormatter={fmt} tick={{fill:T.textMute,fontSize:12,fontFamily:"Montserrat"}} axisLine={{stroke:T.border}} tickLine={false}/>
+            <YAxis type="category" dataKey={nameKey} tick={{fill:T.textMute,fontSize:12,fontFamily:"Montserrat"}} axisLine={false} tickLine={false} width={120}/>
+            <Tooltip content={<ChartTip fmt={fmt}/>}/>
+            <Bar dataKey={dataKey} name="Value" fill={color} radius={[0,3,3,0]}>
+              <LabelList dataKey={dataKey} position="right" formatter={fmt} style={{fill:T.textPri,fontSize:11,fontFamily:"Montserrat"}}/>
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartWrap>
+    </div>
+  );
+};
+
+// ─── FILTERED DUAL HORIZONTAL BAR ────────────────────────────────────────────
+export const FilteredDualHorizontalBar = ({ dataByPeriod, fmt, defaultMonths=24 }) => {
+  const [months, setMonths] = useState(defaultMonths);
+  const data = dataByPeriod[months] || dataByPeriod[12] || [];
+  const h = Math.max(300, data.length * 36);
+  return (
+    <div>
+      <TimePeriodFilter value={months} onChange={setMonths}/>
+      <ChartWrap>
+        <ResponsiveContainer width="100%" height={h}>
+          <BarChart data={data} layout="vertical" margin={{top:4,right:24,left:8,bottom:0}} barCategoryGap="20%">
+            <CartesianGrid strokeDasharray="4 4" stroke={T.grid} horizontal={false}/>
+            <XAxis type="number" tickFormatter={fmt} tick={{fill:T.textMute,fontSize:12,fontFamily:"Montserrat"}} axisLine={{stroke:T.border}} tickLine={false}/>
+            <YAxis type="category" dataKey="name" tick={{fill:T.textMute,fontSize:12,fontFamily:"Montserrat"}} axisLine={false} tickLine={false} width={120}/>
+            <Tooltip content={<ChartTip fmt={fmt}/>}/>
+            <Legend formatter={v=><span style={{fontFamily:"Montserrat,sans-serif",fontSize:13,color:T.textSec}}>{v}</span>} wrapperStyle={{paddingTop:8}}/>
+            <Bar dataKey="median" name="Median Price" fill="#1A5C8A" radius={[0,3,3,0]}/>
+            <Bar dataKey="high" name="High Sale" fill="#B8740A" radius={[0,3,3,0]}/>
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartWrap>
+    </div>
+  );
+};

@@ -1,6 +1,6 @@
 import { T, VALLEY_COLOR } from "../theme";
 import { Card, SectionBanner, LegendRow } from "../components/layout";
-import { CompareLines, SalesBars, DollarVolumeChart, MonthlyBars, HorizontalBar, DualHorizontalBar, GroupedBars, MarketPie, AreaFill, LabeledBars, MonthlyLine } from "../components/charts";
+import { CompareLines, SalesBars, DollarVolumeChart, MonthlyBars, HorizontalBar, DualHorizontalBar, FilteredHorizontalBar, FilteredDualHorizontalBar, GroupedBars, MarketPie, AreaFill, LabeledBars, MonthlyLine } from "../components/charts";
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 const fmtPrice = v => {
@@ -160,20 +160,20 @@ const Overview = ({ data, csvData }) => {
             <MonthlyBars data={csvData.medianPriceByQuarter} dataKey="value" color="#1A5C8A" fmt={fmtPrice}/>
           </Card>
 
-          <Card title="Median Sale Price by Area" sub="Trailing 12-month median by geographic area">
-            <HorizontalBar data={csvData.medianPriceByArea} fmt={fmtPrice} color="#1A5C8A"/>
+          <Card title="Median Sale Price by Area" sub="Median by geographic area">
+            <FilteredHorizontalBar dataByPeriod={csvData.medianPriceByArea} fmt={fmtPrice} color="#1A5C8A"/>
           </Card>
 
-          <Card title="Median Price per Sq Ft by Valley" sub="Current trailing 12-month $/sqft by valley">
-            <HorizontalBar data={csvData.medianPsfByValley} fmt={v=>`$${v}/sqft`} color="#1A5C8A"/>
+          <Card title="Median Price per Sq Ft by Valley" sub="$/sqft by valley">
+            <FilteredHorizontalBar dataByPeriod={csvData.medianPsfByValley} fmt={v=>`$${v}/sqft`} color="#1A5C8A"/>
           </Card>
 
           <Card title="Median $/Sq Ft by Home Size" sub="How price per square foot varies with home size">
             <GroupedBars data={csvData.medianPsfBySizeBucket} fmt={v=>`$${v}`}/>
           </Card>
 
-          <Card title="Median $/Sq Ft by Area" sub="Granular price-per-square-foot by neighborhood / area">
-            <HorizontalBar data={csvData.medianPsfByArea} fmt={v=>`$${v}/sqft`} color="#2C6E35"/>
+          <Card title="Median $/Sq Ft by Area" sub="Price-per-square-foot by neighborhood / area">
+            <FilteredHorizontalBar dataByPeriod={csvData.medianPsfByArea} fmt={v=>`$${v}/sqft`} color="#2C6E35"/>
           </Card>
 
           <Card title="Year-over-Year Change in $/Sq Ft" sub="Percentage change from prior year by area">
@@ -181,7 +181,7 @@ const Overview = ({ data, csvData }) => {
           </Card>
 
           <Card title="High Sale vs Median Price by Area" sub="Highest closed sale compared to the area median">
-            <DualHorizontalBar data={csvData.highVsMedianByArea} fmt={fmtPrice}/>
+            <FilteredDualHorizontalBar dataByPeriod={csvData.highVsMedianByArea} fmt={fmtPrice}/>
           </Card>
 
           {/* ─── Sales Volume & Activity ─────────────────────────────────── */}
@@ -262,7 +262,7 @@ const Overview = ({ data, csvData }) => {
           <SectionBanner title="Size & Segments" sub="How home size and price tiers shape the market"/>
 
           <Card title="Median Home Size by Area" sub="Median finished square footage of closed single-family home sales by area">
-            <HorizontalBar data={csvData.medianSqftByArea} fmt={v=>`${v.toLocaleString()} sqft`} color="#6B6B6B"/>
+            <FilteredHorizontalBar dataByPeriod={csvData.medianSqftByArea} fmt={v=>`${v.toLocaleString()} sqft`} color="#6B6B6B"/>
           </Card>
 
           <Card title="Luxury Sales ($4M+) by Month" sub="Number of $4M+ residential closings per month">

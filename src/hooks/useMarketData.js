@@ -134,9 +134,9 @@ function medianPriceByQuarter(sold) {
     .sort((a, b) => a.quarter.localeCompare(b.quarter));
 }
 
-// Chart 2: Median sale price by area (trailing 12mo)
-function medianPriceByArea(sold) {
-  const recent = trailingMonths(sold, 12);
+// Chart 2: Median sale price by area (by period)
+function medianPriceByArea(sold, months=12) {
+  const recent = months >= 9999 ? sold : trailingMonths(sold, months);
   const groups = groupBy(recent, r => r.area);
   return Object.entries(groups)
     .map(([area, rows]) => ({ name: area, value: median(rows.map(r => r.soldPrice)), count: rows.length }))
@@ -144,9 +144,9 @@ function medianPriceByArea(sold) {
     .sort((a, b) => b.value - a.value);
 }
 
-// Chart 3: Median $/sqft by valley (trailing 12mo)
-function medianPsfByValley(sold) {
-  const recent = trailingMonths(sold, 12);
+// Chart 3: Median $/sqft by valley (by period)
+function medianPsfByValley(sold, months=12) {
+  const recent = months >= 9999 ? sold : trailingMonths(sold, months);
   const groups = groupBy(recent, r => r.valleyKey);
   const names = { north: "North Valley", mid: "Mid Valley", south: "South Valley" };
   return Object.entries(groups)
@@ -177,9 +177,9 @@ function medianPsfBySizeBucket(sold) {
   });
 }
 
-// Chart 5: Median $/sqft by area (trailing 12mo)
-function medianPsfByArea(sold) {
-  const recent = trailingMonths(sold, 12);
+// Chart 5: Median $/sqft by area (by period)
+function medianPsfByArea(sold, months=12) {
+  const recent = months >= 9999 ? sold : trailingMonths(sold, months);
   const groups = groupBy(recent, r => r.area);
   return Object.entries(groups)
     .map(([area, rows]) => {
@@ -217,9 +217,9 @@ function yoyPsfChange(sold) {
     .sort((a, b) => b.value - a.value);
 }
 
-// Chart 7: High sale vs median by area (trailing 12mo)
-function highVsMedianByArea(sold) {
-  const recent = trailingMonths(sold, 12);
+// Chart 7: High sale vs median by area (by period)
+function highVsMedianByArea(sold, months=12) {
+  const recent = months >= 9999 ? sold : trailingMonths(sold, months);
   const groups = groupBy(recent, r => r.area);
   return Object.entries(groups)
     .map(([area, rows]) => ({
@@ -380,9 +380,9 @@ function contractsByMonth(allRows) {
     .sort((a, b) => a.month.localeCompare(b.month));
 }
 
-// Chart 23: Median sqft by area (SFH, trailing 12mo)
-function medianSqftByArea(sold) {
-  const sfh = trailingMonths(sold.filter(r => r.propType === "sfh" && r.sqft), 12);
+// Chart 23: Median sqft by area (SFH, by period)
+function medianSqftByArea(sold, months=12) {
+  const sfh = months >= 9999 ? sold.filter(r => r.propType === "sfh" && r.sqft) : trailingMonths(sold.filter(r => r.propType === "sfh" && r.sqft), months);
   const groups = groupBy(sfh, r => r.area);
   return Object.entries(groups)
     .map(([area, rows]) => ({ name: area, value: Math.round(median(rows.map(r => r.sqft)) || 0), count: rows.length }))
@@ -443,12 +443,12 @@ export default function useMarketData() {
 
     return {
       medianPriceByQuarter: medianPriceByQuarter(sold),
-      medianPriceByArea: medianPriceByArea(sold),
-      medianPsfByValley: medianPsfByValley(sold),
+      medianPriceByArea: Object.fromEntries([12,24,36,9999].map(m=>[m, medianPriceByArea(sold,m)])),
+      medianPsfByValley: Object.fromEntries([12,24,36,9999].map(m=>[m, medianPsfByValley(sold,m)])),
       medianPsfBySizeBucket: medianPsfBySizeBucket(sold),
-      medianPsfByArea: medianPsfByArea(sold),
+      medianPsfByArea: Object.fromEntries([12,24,36,9999].map(m=>[m, medianPsfByArea(sold,m)])),
       yoyPsfChange: yoyPsfChange(sold),
-      highVsMedianByArea: highVsMedianByArea(sold),
+      highVsMedianByArea: Object.fromEntries([12,24,36,9999].map(m=>[m, highVsMedianByArea(sold,m)])),
       monthlySalesVolume: monthlySalesVolume(sold),
       monthlyNewListings: monthlyNewListings(rawRows),
       monthlyActiveInventory: monthlyActiveInventory(rawRows),
@@ -461,7 +461,7 @@ export default function useMarketData() {
       priceReductionsByMonth: priceReductionsByMonth(rawRows),
       medianDomByMonth: medianDomByMonth(sold),
       contractsByMonth: contractsByMonth(rawRows),
-      medianSqftByArea: medianSqftByArea(sold),
+      medianSqftByArea: Object.fromEntries([12,24,36,9999].map(m=>[m, medianSqftByArea(sold,m)])),
       luxurySalesByMonth: luxurySalesByMonth(sold),
       valleySnapshots: valleySnapshots(sold, rawRows),
     };
